@@ -1,8 +1,0 @@
-{$PROOFCHECK_DOMAIN} {
-    encode zstd gzip
-    request_body { max_size 4MB }
-    reverse_proxy app:8765 {
-        # Overwrite supplied header; backend uses this only when behind this proxy.
-        header_up X-Real-IP {remote_host}
-    }
-}

@@ -1,9 +1,0 @@
-ProofCheck 1.1 verification — 2026-10-25
-- Python API tests: 9/9 passed (standard-library unittest).
-- JavaScript syntax: app.js and bench-worker.js passed node --check.
-- Web mode HTTP /api/status: returned {ok:true,mode:"web",local_inspector:false} in local smoke run.
-- Web mode denies native system/benchmark endpoints; two sessions isolated with separate high-entropy bearer tokens.
-- Evidence upload, report redaction, expiry/revocation, deletion and server-measured desktop tests exercised.
-- Browser automation: attempted via Chromium/Playwright, blocked by current environment policy (ERR_BLOCKED_BY_ADMINISTRATOR); no cross-device or actual hardware acceptance tests performed.
-- Live Render/VPS deploy NOT performed. No public URL created.
-- Optional post-deployment browser test: tools/browser_smoke.py (requires pip install playwright; playwright install chromium).
