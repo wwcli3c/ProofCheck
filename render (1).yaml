@@ -1,0 +1,19 @@
+# ProofCheck — Render Free
+# Files server.py, index.html and assets/ are in the repository ROOT.
+# Place this render.yaml at the repository root and Sync the existing Blueprint.
+services:
+  - type: web
+    name: proofcheck-public
+    runtime: python
+    plan: free
+    region: frankfurt
+    # No rootDir: start from the repository root, not ProofCheck_Public_Ready/
+    buildCommand: python -m compileall -q .
+    startCommand: python server.py --mode web --host 0.0.0.0 --port $PORT --no-browser
+    healthCheckPath: /api/status
+    autoDeployTrigger: commit
+    envVars:
+      - key: PROOFCHECK_DB
+        value: /tmp/proofcheck.sqlite3
+      - key: PROOFCHECK_CREATE_PER_HOUR
+        value: '600'
