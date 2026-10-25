@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0b1020">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" href="/assets/icon-192.png" type="image/png">
+<title>ProofCheck | فحص وتوثيق الأجهزة</title>
+<link rel="stylesheet" href="/assets/style.css?v=1.1">
+<script src="/assets/app.js?v=1.1" defer></script>
+</head>
+<body>
+<div class="app" id="appMain">
+ <header class="top shell">
+  <div class="brand"><span class="mark">✓</span><span><strong>ProofCheck</strong><small>فحص الأجهزة بالأدلة، لا بالتخمين</small></span></div>
+  <span class="env" id="envLabel">جاري الاتصال…</span>
+ </header>
+ <main class="shell">
+  <div class="hero box">
+   <div><div class="eyebrow">منصة فحص الأجهزة المستعملة</div><h1>اعرف حالة جهازك<br><em>قبل البيع أو الشراء</em></h1><p>فحوصات عملية حسب قدرات الجهاز والمتصفح، سجل إصلاحات وأدلة، وتقرير واضح يميّز بين ما قيس فعليًا وما لم يمكن التحقق منه.</p>
+    <div class="badges"><span>✓ اختبارات حقيقية عند الإتاحة</span><span>✓ حفظ الأدلة</span><span>✓ تقارير خاصة وقابلة للمشاركة</span></div>
+   </div><div class="hero-art" aria-hidden="true"><div class="device-visual"><div class="scan-line"></div><span class="check-icon">✓</span><span class="hero-art-label">SYSTEM CHECK</span><span class="hero-art-sub">Inspection in progress</span></div></div>
+  </div>
+  <div class="alert" id="notice" role="status" aria-live="polite">جاري تجهيز الجلسة…</div>
+  <section class="box hidden" id="welcomeGate">
+    <h2>ابدأ فحص جهازك من هذا الرابط</h2>
+    <p>يفحص الموقع وظائف متاحة في متصفح جهازك، مثل الشاشة واللمس والكاميرا والميكروفون بإذنك. لن تُطلب صلاحية الكاميرا أو الميكروفون إلا عند تشغيل الاختبار بنفسك. فحوصات القطع الداخلية محدودة بقواعد نظام التشغيل.</p>
+    <label class="consent"><input type="checkbox" id="acceptStorage"> أوافق على حفظ بيانات فحصي وأي ملفات أرفقها على خادم ProofCheck، ويمكنني حذفها لاحقًا. لن تتم مشاركة بياناتي إلا عبر رابط تقرير أنشئه أنا.</label>
+    <div class="actions"><button class="primary" type="button" id="startScan" disabled>بدء الفحص الآن</button></div>
+    <p class="help">رمز جلسة الفحص الخاص هو مفتاح الوصول لنتائجك. احفظه لاستعادة الفحص على جهاز آخر، ولا تشاركه مع أحد.</p>
+  </section>
+  <div class="overview">
+    <div class="stat"><span>الاختبارات التي تم تقييمها</span><b id="countDone">0 / 0</b></div>
+    <div class="stat"><span>نتائج ناجحة</span><b id="countPass">0</b></div>
+    <div class="stat"><span>تحتاج متابعة</span><b id="countIssue">0</b></div>
+    <div class="stat"><span>الملفات المرفقة</span><b id="countEvidence">0</b></div>
+  </div>
+  <nav class="tabs" aria-label="أقسام التطبيق">
+    <button class="tab selected" data-tab="device">بيانات الجهاز</button>
+    <button class="tab" data-tab="tests">الفحوصات</button>
+    <button class="tab" data-tab="repairs">الإصلاحات والأدلة</button>
+    <button class="tab" data-tab="reports">التقارير والمشاركة</button>
+  </nav>
+  <section id="tab-device" class="tab-pane">
+   <section class="box session-box">
+    <div class="section-title"><h2>جلسات الفحص المحفوظة</h2><span>اختر جهازًا سابقًا أو أدخل رمز جلسته الخاصة</span></div>
+    <div class="session-tools">
+     <label>جلساتي على هذا المتصفح<select id="sessionHistory"><option value="">لا توجد جلسات محفوظة</option></select></label>
+     <button id="openHistory" class="ghost" type="button">فتح الجلسة</button>
+     <label>استعادة جلسة برمزها<input id="sessionCode" type="text" autocomplete="off" spellcheck="false" dir="ltr" placeholder="الصق رمز جلستك الخاص"></label>
+     <button id="openByCode" class="ghost" type="button">استعادة</button>
+    </div>
+    <div class="actions"><button id="copySessionID" type="button" class="ghost">نسخ رمز جلستي الخاصة للحفظ والاستعادة</button></div><p class="help">رمز الجلسة سرّ يمنح حق القراءة والتعديل والحذف. احتفظ به بأمان ولا تشاركه. للمشاركة استخدم «رابط التقرير» للقراءة فقط.</p>
+   </section>
+   <div class="grid-two">
+    <section class="box"><div class="section-title"><h2>هوية الجهاز</h2><span>يُحفظ في جلسة خاصة</span></div>
+      <form id="deviceForm" class="field-grid">
+       <label>نوع الجهاز<select id="deviceCategory"><option value="laptop">لابتوب</option><option value="mobile">جوال</option><option value="desktop">كمبيوتر مكتبي</option><option value="tablet">جهاز لوحي</option><option value="other">آخر</option></select></label>
+       <label>الشركة<input id="deviceMake" placeholder="مثل Apple / Samsung / Dell" maxlength="200"></label>
+       <label>الموديل<input id="deviceModel" placeholder="اسم الموديل" maxlength="200"></label>
+       <label>اسم اختياري للجهاز<input id="deviceNickname" placeholder="جهاز المعرض رقم 01" maxlength="200"></label>
+       <label>الرقم التسلسلي (خاص، لا يظهر في الرابط العام)<input id="deviceSerial" placeholder="إن توفر" maxlength="200"></label>
+       <label>البائع / مركز الصيانة (خاص)<input id="deviceSeller" placeholder="اختياري" maxlength="200"></label>
+       <label class="wide">ملاحظات الجهاز<textarea id="deviceNotes" rows="3" maxlength="200"></textarea></label>
+       <div class="wide actions"><button type="submit" class="primary">حفظ بيانات الجهاز</button><button type="button" id="newSession" class="ghost">جلسة فحص جديدة</button></div>
+      </form>
+    </section>
+    <section class="box"><div class="section-title"><h2>معلومات النظام</h2><span id="sourceLabel">مصدر البيانات</span></div>
+      <div id="systemInfo" class="info-list">يتم تحميل بيانات النظام…</div>
+      <div class="actions"><button id="scanSystem" class="primary">قراءة معلومات الجهاز</button><button id="scanStorage" class="ghost">حالة التخزين و SMART إن توفر</button></div>
+      <p class="help">البيانات التي يعرضها نظام التشغيل لا تُثبت أن القطعة أصلية أو لم تُستبدل. على الهواتف عبر المتصفح، لا يمكن قراءة الأرقام التسلسلية أو صحة البطارية الداخلية دون صلاحيات وتطبيق أصلي متخصص.</p>
+    </section>
+   </div>
+  </section>
+  <section id="tab-tests" class="tab-pane hidden">
+    <section class="box"><div class="section-title"><h2>الفحوصات التفاعلية</h2><span>اختر الاختبار وسجّل نتيجته</span></div><p class="muted">تظهر النتائج بوضوح كـ «قياس برمجي»، «إفادة نظام»، أو «تأكيد المستخدم». يمكنك اختيار «غير متاح» بدلاً من اختلاق نتيجة.</p><div id="checkCards" class="test-grid"></div></section>
+    <section class="box space"><div class="section-title"><h2 id="benchmarkMode">قياسات جهازك</h2><span>داخل المتصفح أو عبر الكمبيوتر المحلي</span></div>
+      <p class="muted" id="benchmarkScope">قياسات قصيرة لا تثبت جودة القطع أو أصالتها، وتجري على جهازك، لا على خادم ProofCheck.</p>
+      <div class="actions"><button class="primary" id="runBenchmarks">تشغيل المعالج + RAM + التخزين</button><button class="ghost" id="runCpu">المعالج فقط</button><button class="ghost" id="runMemory">RAM فقط</button><button class="ghost" id="runDisk">القرص فقط</button></div>
+      <div id="benchmarkResults" class="info-list muted">لم تُنفّذ اختبارات الكمبيوتر بعد.</div>
+    </section>
+  </section>
+  <section id="tab-repairs" class="tab-pane hidden">
+   <div class="grid-two">
+    <section class="box"><div class="section-title"><h2>سجل الإصلاح والاستبدال</h2><span>معلومات صرّح بها المستخدم</span></div>
+       <form id="repairForm" class="field-grid">
+        <label>القطعة<input id="repairPart" required placeholder="بطارية / شاشة / لوحة…"></label>
+        <label>الإجراء<select id="repairAction"><option value="replace">استبدال</option><option value="repair">إصلاح</option><option value="unknown">غير محدد</option></select></label>
+        <label>التاريخ<input type="date" id="repairDate"></label>
+        <label>جهة الإصلاح<input id="repairProvider" placeholder="اسم الورشة (اختياري)"></label>
+        <label class="wide">مرجع الفاتورة أو الدليل<input id="repairEvidence" placeholder="رقم فاتورة أو وصف ملف مرفق"></label>
+        <label class="wide">ملاحظات<input id="repairNotes" maxlength="500"></label>
+        <button type="submit" class="primary">إضافة للسجل</button>
+       </form>
+       <div id="repairsList" class="stack"></div>
+    </section>
+    <section class="box"><div class="section-title"><h2>الأدلة والمرفقات</h2><span>حتى 30 ملفًا، 2MB لكل ملف</span></div>
+      <p class="muted">صورة قطعة، فاتورة، أو تقرير فني. تُحفظ الملفات في خادم ProofCheck الحالي؛ لا تُنشر في رابط التقرير العام. البصمة SHA-256 تكشف التعديل بعد الإرفاق، لكنها ليست شهادة بصحة الفاتورة أو هوية القطعة.</p>
+      <label class="upload" for="evidenceInput">+ اختر صور PNG / JPEG / WebP أو PDF<input type="file" id="evidenceInput" accept="image/png,image/jpeg,image/webp,application/pdf" multiple></label>
+      <div id="evidenceList" class="stack"></div>
+    </section>
+   </div>
+  </section>
+  <section id="tab-reports" class="tab-pane hidden">
+    <div class="grid-two">
+     <section class="box"><div class="section-title"><h2>التقرير النهائي</h2><span>سجل الفحص وليس شهادة أصالة</span></div>
+       <label>تقييم أو ملاحظات ختامية<textarea id="remarks" rows="4" maxlength="3000" placeholder="سجّل الملاحظات التي لم تتضمنها الاختبارات"></textarea></label>
+       <div class="actions"><button id="saveReport" class="primary">حفظ التقييم</button><button id="jsonReport" class="ghost">تنزيل JSON</button><button id="printReport" class="ghost">طباعة / PDF</button></div>
+       <div id="reportSummary" class="report-summary"></div>
+     </section>
+     <section class="box"><div class="section-title"><h2>رابط مشاركة التقرير</h2><span>لقطة ثابتة قابلة للإلغاء</span></div>
+       <p class="muted">عند الضغط على إنشاء الرابط، تُنشأ نسخة قراءة فقط من التقرير بعد حجب الرقم التسلسلي واسم البائع. لا تتضمن الملفات نفسها، بل أسماءها وبصماتها. يعمل الرابط خارج جهازك فقط عند نشر الخادم على نطاق HTTPS عام.</p>
+       <label>مدة الصلاحية<select id="shareDays"><option value="1">يوم واحد</option><option value="7" selected>7 أيام</option><option value="30">30 يومًا</option></select></label>
+       <div class="actions"><button id="createShare" class="primary">إنشاء رابط قراءة فقط</button></div>
+       <div id="shareOutput" class="share-output"></div><div id="sharesList" class="stack"></div>
+       <div class="danger-zone"><button id="deleteSession" class="danger">حذف الجلسة وكل مرفقاتها وروابطها</button></div>
+     </section>
+    </div>
+  </section>
+  <footer>ProofCheck 1.1 · النتائج تمثّل نطاق كل اختبار فقط · لا تُرسل البيانات تلقائيًا إلى طرف ثالث</footer>
+ </main>
+</div>
+<div id="testModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal-card"><div class="modal-head"><h2 id="modalTitle">اختبار</h2><button class="iconbtn" id="closeModal" aria-label="إغلاق">✕</button></div>
+   <p id="modalDesc" class="muted"></p><div id="modalBody"></div>
+   <div class="status-chooser"><button class="success" data-mark="pass">✓ اجتاز</button><button class="danger" data-mark="fail">✕ مشكلة</button><button class="ghost" data-mark="needs_review">يحتاج فحص فني</button><button class="ghost" data-mark="unavailable">غير متاح</button></div>
+  </div>
+</div>
+<div id="screenOverlay" class="screen-overlay hidden" role="dialog" aria-label="فحص ألوان الشاشة" tabindex="0"><span id="screenPrompt">اضغط لتغيير اللون – اضغط Esc للخروج</span></div>
+<div id="toast" role="status" aria-live="polite" class="toast hidden"></div>
+<div id="publicReport" class="public-page hidden"></div>
+</body>
+</html>

@@ -1,0 +1,35 @@
+# VPS: create .env from .env.example; point DNS to VPS; open ports 80/443.
+services:
+  app:
+    build: .
+    restart: unless-stopped
+    volumes:
+      - proofcheck_data:/data
+    environment:
+      PROOFCHECK_DB: /data/proofcheck.sqlite3
+      PROOFCHECK_ALLOWED_HOSTS: ${PROOFCHECK_DOMAIN:?Set PROOFCHECK_DOMAIN in .env}
+      PROOFCHECK_TRUST_PROXY: '1'
+    read_only: true
+    tmpfs:
+      - /tmp:rw,nosuid,size=256m
+    security_opt:
+      - no-new-privileges:true
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    depends_on:
+      - app
+    ports:
+      - '80:80'
+      - '443:443'
+      - '443:443/udp'
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    environment:
+      PROOFCHECK_DOMAIN: ${PROOFCHECK_DOMAIN:?Set PROOFCHECK_DOMAIN in .env}
+volumes:
+  proofcheck_data:
+  caddy_data:
+  caddy_config:
